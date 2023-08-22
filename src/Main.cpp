@@ -109,12 +109,10 @@ namespace hooks
     bool osiris_query_hook(uint32_t id, bg3se::OsiArgumentDesc* args)
     {
         bg3se::Function** func = (*_osiris.globals.Functions)->FindById(id);
+        bool ret = _osiris_query_hook->call_original<bool>(id, args);
         const std::string in_args = format_in_args(*func, args);
-        bool ret = _osiris_call_hook->call_original<bool>(id, args);
-        // TODO: It doesn't seem to capture the out args, I'm guessing they're stored in some VM struct.
-        //const std::string out_args = format_out_args(*func, args);
-        //printf("%s(%s) -> %s\n", (*func)->Signature->Name, in_args.c_str(), out_args.c_str());
-        printf("%s(%s)\n", (*func)->Signature->Name, in_args.c_str());
+        const std::string out_args = format_out_args(*func, args);
+        printf("%s(%s) -> %s\n", (*func)->Signature->Name, in_args.c_str(), out_args.c_str());
         return _osiris_query_hook->call_original<bool>(id, args);
     }
 
